@@ -1,0 +1,42 @@
+#!/bin/bash
+#SBATCH --job-name=sbatch_MOM6_UTA
+#SBATCH --output=runjob.out
+#SBATCH --error=runjob.err
+#SBATCH --time=04:00:00
+#SBATCH -p normal
+#SBATCH --nodes=15
+#SBATCH --ntasks-per-node=48
+#SBATCH --mail-type=END,FAIL      
+#SBATCH --mail-user=sina.khani@austin.utexas.edu
+#SBATCH -A  ADCIRC
+
+module load intel/19.1.1
+module load netcdf/4.6.2
+
+ulimit -s unlimited
+ulimit -c unlimited
+export OMP_NUM_THREADS=$SLURM_CPUS_PER_TASK
+
+# export OMP_NUM_THREADS=2
+# export KMP_STACKSIZE="120M"
+
+
+cd /scratch/08314/skhani/MOM6_June4/MOM6-examples/Neverworld/NL_1deg_rghnss
+
+echo " ****** START OF JOB ******"
+ibrun -n 720  ../../build/ocean_only/MOM6 > std.out
+
+echo " ****** END OF JOB ******"
+
+STATUS=$status
+echo ""
+echo "==> Resulting STATUS = $STATUS"
+echo
+
+
+
+
+
+
+
+
