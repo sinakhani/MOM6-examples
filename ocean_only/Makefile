@@ -118,7 +118,12 @@ MAKEFLAGS += -rR
 all: $(BUILD)/MOM6
 
 # NOTE: If libFMS has changed, then we completely rebuild MOM6
-$(BUILD)/MOM6: $(call rwildcard,$(CODEBASE)/src $(CODEBASE)/config_src/drivers/solo_driver $(CODEBASE)/config_src/infra/ $(CODEBASE)/config_src/external,*.h *.c *.inc *.F90)
+$(BUILD)/MOM6: $(wildcard $(CODEBASE)/src/*)
+$(BUILD)/MOM6: $(wildcard $(CODEBASE)/src/*/*)
+$(BUILD)/MOM6: $(wildcard $(CODEBASE)/src/*/*/*)
+$(BUILD)/MOM6: $(wildcard $(CODEBASE)/config_src/drivers/solo_driver/*)
+$(BUILD)/MOM6: $(wildcard $(CODEBASE)/config_src/infra/*/*)
+$(BUILD)/MOM6: $(wildcard $(CODEBASE)/config_src/external/*/*)
 $(BUILD)/MOM6: $(FMS_BUILD)/libFMS.a
 $(BUILD)/MOM6: $(BUILD)/Makefile
 	$(MAKE) -C $(BUILD) MOM6
@@ -149,15 +154,12 @@ $(BUILD):
 
 # Dependencies
 
-$(FMS_BUILD)/libFMS.a: $(call rwildcard,$(FMS_CODEBASE)/,*.c *.h *.inc *.F90)
+$(FMS_BUILD)/libFMS.a: $(wildcard $(FMS_CODEBASE)/*/*)
 	$(MAKE) -C ../shared/fms \
 	  BUILD=$(abspath $(FMS_BUILD)) \
 	  CODEBASE=$(abspath $(FMS_CODEBASE))
 
 FORCE:
-
-# Recursive wildcard (finds all files in $1 with suffixes in $2)
-rwildcard=$(foreach d,$(wildcard $(1:=/*)),$(call rwildcard,$d,$2) $(filter $(subst *,%,$2),$d))
 
 
 #-----------
