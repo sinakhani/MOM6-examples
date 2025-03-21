@@ -238,8 +238,8 @@ endif
 ifdef INCLUDE
 EXPT_MANIFEST := $(INCLUDE)
 else
-ALL_EXPTS := $(patsubst ./%/,%,\
-  $(dir $(shell find . -name MOM_parameter_doc.all)))
+ALL_EXPTS := $(patsubst %/,%,\
+  $(dir $(shell git ls-files . | grep MOM_parameter_doc.all)))
 
 EXPT_MANIFEST := $(filter-out $(EXCLUDE) $(TESTDIR)/%,$(ALL_EXPTS))
 endif
