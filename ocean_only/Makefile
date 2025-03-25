@@ -267,16 +267,7 @@ $(TESTDIR)/%/test: $(BUILD)/MOM6
 # I probably need a rule in Makefile.in for all the autoconf stuff.
 .PHONY: clean
 clean:
-	cd $(BUILD) && make distclean
-	rm -f $(BUILD)/aclocal.m4
-	rm -rf $(BUILD)/autom4te.cache
-	rm -rf $(BUILD)/config.cache
-	rm -f $(BUILD)/configure
-	rm -f $(BUILD)/configure.ac
-	rm -rf $(BUILD)/m4
-	rm -f $(BUILD)/Makefile.in
-	rmdir $(BUILD)
-	$(MAKE) -C ../shared/fms clean
+	rm -rf $(BUILD)
 
 #.PHONY: clean.run
 #ifneq ($(realpath $(EXPT)), $(realpath $(RUNDIR)))

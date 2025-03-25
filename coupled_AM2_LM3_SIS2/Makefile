@@ -8,10 +8,10 @@ SIS_MEMORY ?=
 
 # Dependencies
 FMS_CODEBASE ?= ../src/FMS1
-FMS_BUILD ?= ../shared/fms/build_fms1
+FMS_BUILD ?= ../shared/fms/build
 AM2_BUILD ?= ../shared/AM2/build
-ICEBERGS_BUILD ?= ../shared/icebergs/build_fms1
-ICE_PARAM_BUILD ?= ../shared/ice_param/build_fms1
+ICEBERGS_BUILD ?= ../shared/icebergs/build
+ICE_PARAM_BUILD ?= ../shared/ice_param/build
 LM3_BUILD ?= ../shared/LM3/build
 
 # Autoconf configuration
@@ -43,7 +43,6 @@ EXTRA_SRC_DIRS = \
 CONFIG_FLAGS := --config-cache
 CONFIG_FLAGS += --srcdir=$(abspath $(MOM_CODEBASE))
 CONFIG_FLAGS += --with-driver=FMS_cap
-CONFIG_FLAGS += --with-framework=fms1
 ifdef MOM_MEMORY
   CONFIG_FLAGS += MOM_MEMORY=$(abspath $(MOM_MEMORY))
 endif
@@ -110,6 +109,7 @@ $(BUILD)/coupler_main: $(wildcard $(MOM_CODEBASE)/src/*/*/*)
 $(BUILD)/coupler_main: $(wildcard $(MOM_CODEBASE)/config_src/drivers/FMS_cap/*)
 $(BUILD)/coupler_main: $(wildcard $(MOM_CODEBASE)/config_src/infra/*/*)
 $(BUILD)/coupler_main: $(wildcard $(MOM_CODEBASE)/config_src/external/*/*)
+$(BUILD)/coupler_main: $(foreach dir,$(EXTRA_SRC_DIRS),$(wildcard $(dir)/*))
 $(BUILD)/coupler_main: $(FMS_BUILD)/libFMS.a
 $(BUILD)/coupler_main: $(AM2_BUILD)/libAM2.a
 $(BUILD)/coupler_main: $(LM3_BUILD)/libLM3.a
@@ -287,17 +287,11 @@ $(TESTDIR)/%/test: $(BUILD)/coupler_main
 
 .PHONY: clean
 clean:
+	$(MAKE) -C ../shared/AM2 BUILD=$(abspath $(AM2_BUILD)) clean
+	$(MAKE) -C ../shared/LM3 BUILD=$(abspath $(LM3_BUILD)) clean
+	$(MAKE) -C ../shared/ice_param BUILD=$(abspath $(ICE_PARAM_BUILD)) clean
+	$(MAKE) -C ../shared/icebergs BUILD=$(abspath $(ICEBERGS_BUILD)) clean
 	rm -rf $(BUILD)
-	$(MAKE) -C ../shared/AM2 clean \
-	  BUILD=$(abspath $(AM2_BUILD))
-	$(MAKE) -C ../shared/LM3 clean
-	  BUILD=$(abspath $(LM3_BUILD))
-	$(MAKE) -C ../shared/ice_param clean \
-	  BUILD=$(abspath $(ICE_PARAM_BUILD))
-	$(MAKE) -C ../shared/icebergs clean \
-	  BUILD=$(abspath $(ICEBERGS_BUILD))
-	$(MAKE) -C ../shared/fms clean \
-	  BUILD=$(abspath $(FMS_BUILD))
 
 .PHONY: clean.runs
 clean.runs: $(foreach e,$(EXPTS),clean.$(e))

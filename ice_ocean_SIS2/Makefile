@@ -33,8 +33,7 @@ PYTHON ?= python
 TESTDIR ?= scratch
 EXCLUDE ?= \
   OM4_025.JRA \
-  SIS2_icebergs \
-  SIS2_bergs_cgrid
+  SIS2_icebergs
 
 # Autoconf setup
 EXTRA_SRC_DIRS := \
@@ -106,6 +105,7 @@ $(BUILD)/coupler_main: $(wildcard $(MOM_CODEBASE)/src/*/*/*)
 $(BUILD)/coupler_main: $(wildcard $(MOM_CODEBASE)/config_src/drivers/FMS_cap/*)
 $(BUILD)/coupler_main: $(wildcard $(MOM_CODEBASE)/config_src/infra/*/*)
 $(BUILD)/coupler_main: $(wildcard $(MOM_CODEBASE)/config_src/external/*/*)
+$(BUILD)/coupler_main: $(foreach dir,$(EXTRA_SRC_DIRS),$(wildcard $(dir)/*))
 $(BUILD)/coupler_main: $(FMS_BUILD)/libFMS.a
 $(BUILD)/coupler_main: $(ATMOS_BUILD)/libatmos_null.a
 $(BUILD)/coupler_main: $(LAND_BUILD)/libland_null.a
@@ -283,9 +283,8 @@ $(TESTDIR)/%/test: $(BUILD)/coupler_main
 
 .PHONY: clean
 clean:
+	$(MAKE) -C ../shared/atmos_null BUILD=$(abspath $(ATMOS_BUILD)) clean
+	$(MAKE) -C ../shared/land_null BUILD=$(abspath $(LAND_BUILD)) clean
+	$(MAKE) -C ../shared/ice_param BUILD=$(abspath $(ICE_PARAM_BUILD)) clean
+	$(MAKE) -C ../shared/icebergs BUILD=$(abspath $(ICEBERGS_BUILD)) clean
 	rm -rf $(BUILD)
-	$(MAKE) -C ../shared/atmos_null clean
-	$(MAKE) -C ../shared/land_null clean
-	$(MAKE) -C ../shared/ice_param clean
-	$(MAKE) -C ../shared/icebergs clean
-	$(MAKE) -C ../shared/fms clean
