@@ -43,7 +43,7 @@ cd 02.ignore
 test -d ../INPUT && ln -sf ../INPUT .
 cp -f ../MOM_* ../*table ../input.nml .
 test -e ../isopyc_coords.nc && cp -f ../isopyc_coords.nc .
-if [[ -z ${INPUT_DAYS} && -z ${INPUT_HOURS} ]]; then
+if [[ ${INPUT_DAYS} -eq "0" && ${INPUT_HOURS} -eq "0" ]]; then
     sed -i "/^DAYMAX/d" MOM_input
     echo "DAYMAX=$DOUBLE_DAYMAX" >> MOM_input
 fi
@@ -60,7 +60,7 @@ cd ../01.ignore
 test -d ../INPUT && ln -sf ../INPUT .
 cp -f ../MOM_* ../*table ../input.nml .
 test -e ../isopyc_coords.nc && cp -f ../isopyc_coords.nc .
-if [[ -z ${INPUT_DAYS} && -z ${INPUT_HOURS} ]]; then
+if [[ ${INPUT_DAYS} -eq "0" && ${INPUT_HOURS} -eq "0" ]]; then
     sed -i "/^DAYMAX/d" MOM_input
     echo "DAYMAX=$HALF_DAYMAX" >> MOM_input
 fi
@@ -78,7 +78,7 @@ cd ../12.ignore
 test -d ../INPUT && mkdir -p INPUT && ( cd INPUT && ln -sf ../../INPUT/* . )
 cp -f ../MOM_* ../*table ../input.nml .
 test -e ../isopyc_coords.nc && cp -f ../isopyc_coords.nc .
-if [[ -z ${INPUT_DAYS} && -z ${INPUT_HOURS} ]]; then
+if [[ ${INPUT_DAYS} -eq "0" && ${INPUT_HOURS} -eq "0" ]]; then
     sed -i "/^DAYMAX/d" MOM_input
     echo "DAYMAX=$DOUBLE_DAYMAX" >> MOM_input
 fi
